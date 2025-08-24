@@ -12,7 +12,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('/api/auth/login', { username, password });
+            const res = await axios.post('https://missionops.onrender.com/api/auth/login', { username, password });
             login(res.data.token);
             navigate('/dashboard');
         } catch (err) {

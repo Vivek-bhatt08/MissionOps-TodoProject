@@ -6,18 +6,24 @@ import { useNavigate, Link } from 'react-router-dom';
 const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false); // Spinner ke liye state
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true); // Spinner chalu karein
+
         try {
-            const res = await axios.post('https://missionops.onrender.com/api/auth/register', { username, password });
+            // Yahan purana, local path use kiya gaya hai
+            const res = await axios.post('/api/auth/register', { username, password });
             login(res.data.token);
             navigate('/dashboard');
         } catch (err) {
-            console.error(err.response.data);
-            alert('Error registering user. They may already exist.');
+            console.error(err.response ? err.response.data : "Server se response nahi aaya");
+            alert('User already exists or another registration error occurred.');
+        } finally {
+            setIsLoading(false); // Spinner band karein
         }
     };
 
@@ -36,7 +42,9 @@ const Register = () => {
                     <label htmlFor="password">Password</label>
                     <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
-                <button type="submit">Create Account</button>
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? <div className="spinner"></div> : 'Create Account'}
+                </button>
             </form>
             <div className="auth-footer">
                 <p>Already have an account? <Link to="/login">Log In</Link></p>
@@ -46,3 +54,4 @@ const Register = () => {
 };
 
 export default Register;
+

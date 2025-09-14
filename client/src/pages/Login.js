@@ -6,18 +6,24 @@ import { useNavigate, Link } from 'react-router-dom';
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false); // Spinner ke liye state
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true); // Spinner chalu karein
+
         try {
-            const res = await axios.post('https://missionops.onrender.com/api/auth/login', { username, password });
+            // Yahan purana, local path use kiya gaya hai
+            const res = await axios.post('/api/auth/login', { username, password });
             login(res.data.token);
             navigate('/dashboard');
         } catch (err) {
-            console.error(err.response.data);
+            console.error(err.response ? err.response.data : "Server se response nahi aaya");
             alert('Invalid credentials');
+        } finally {
+            setIsLoading(false); // Spinner band karein
         }
     };
 
@@ -36,7 +42,9 @@ const Login = () => {
                     <label htmlFor="password">Password</label>
                     <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? <div className="spinner"></div> : 'Login'}
+                </button>
             </form>
             <div className="auth-footer">
                 <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
@@ -46,3 +54,4 @@ const Login = () => {
 };
 
 export default Login;
+

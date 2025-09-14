@@ -208,3 +208,29 @@ body {
   }
   .todo-form { grid-template-columns: 1fr; }
 }
+
+
+/* ===== LOADING SPINNER ===== */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  margin: 0 auto; /* Button ke beech mein spinner laane ke liye */
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Jab button loading state mein ho, toh use style karne ke liye */
+.auth-form button:disabled {
+  background: var(--primary-hover);
+  cursor: not-allowed;
+  transform: translateY(0); /* Hover effect ko rokein */
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); /* Shadow ko normal rakhein */
+}

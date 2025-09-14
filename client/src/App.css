@@ -209,7 +209,6 @@ body {
   .todo-form { grid-template-columns: 1fr; }
 }
 
-
 /* ===== LOADING SPINNER ===== */
 .spinner {
   width: 20px;

@@ -3,9 +3,6 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-// Define the live backend URL
-const backendUrl = 'https://missionops.onrender.com';
-
 const Dashboard = () => {
     const [todos, setTodos] = useState([]);
     const [text, setText] = useState('');
@@ -18,8 +15,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // UPDATED: Use the full backend URL
-        axios.get(`${backendUrl}/api/todos`)
+        axios.get('/api/todos')
             .then(res => setTodos(res.data))
             .catch(err => console.error(err));
     }, []);
@@ -29,8 +25,7 @@ const Dashboard = () => {
         if(!text.trim()) return;
         try {
             const newTodo = { text, priority, dueDate: dueDate || null };
-            // UPDATED: Use the full backend URL
-            const res = await axios.post(`${backendUrl}/api/todos`, newTodo);
+            const res = await axios.post('/api/todos', newTodo);
             setTodos([res.data, ...todos]);
             setText('');
             setPriority('Medium');
@@ -42,8 +37,7 @@ const Dashboard = () => {
 
     const toggleComplete = async (id, completed) => {
         try {
-            // UPDATED: Use the full backend URL
-            const res = await axios.put(`${backendUrl}/api/todos/${id}`, { completed: !completed });
+            const res = await axios.put(`/api/todos/${id}`, { completed: !completed });
             setTodos(todos.map(todo => (todo._id === id ? res.data : todo)));
         } catch (err) {
             console.error(err);
@@ -52,8 +46,7 @@ const Dashboard = () => {
 
     const handleDelete = async (id) => {
         try {
-            // UPDATED: Use the full backend URL
-            await axios.delete(`${backendUrl}/api/todos/${id}`);
+            await axios.delete(`/api/todos/${id}`);
             setTodos(todos.filter(todo => todo._id !== id));
         } catch (err) {
             console.error("Error deleting task:", err);
@@ -68,8 +61,7 @@ const Dashboard = () => {
     
     const handleSaveEdit = async (id) => {
         try {
-            // UPDATED: Use the full backend URL
-            const res = await axios.put(`${backendUrl}/api/todos/${id}`, { text: editingText });
+            const res = await axios.put(`/api/todos/${id}`, { text: editingText });
             setTodos(todos.map(todo => (todo._id === id ? res.data : todo)));
             setEditingId(null);
             setEditingText('');
@@ -151,6 +143,7 @@ const Dashboard = () => {
                                     </div>
                                 </div>
                                 <div className="task-actions">
+                                    {/* --- ICONS ADDED HERE --- */}
                                     <button onClick={(e) => { e.stopPropagation(); handleStartEdit(todo); }} className="icon-btn edit-btn">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/></svg>
                                     </button>

@@ -8,13 +8,13 @@ import './App.css';
 
 const PrivateRoute = ({ children }) => {
     const { isAuthenticated } = useContext(AuthContext);
-    return isAuthenticated ? children : <Navigate to="/login" />;
+    return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
 function App() {
     return (
         <AuthProvider>
-            {/* This new div is the main container for the background */}
+            {/* Background container */}
             <div className="app-background">
                 <div className="shape1"></div>
                 <div className="shape2"></div>
@@ -31,7 +31,8 @@ function App() {
                                     </PrivateRoute>
                                 }
                             />
-                            <Route path="*" element={<Navigate to="/login" />} />
+                            {/* Agar koi random route hit kare to login pe bhej do */}
+                            <Route path="*" element={<Navigate to="/login" replace />} />
                         </Routes>
                     </div>
                 </Router>
